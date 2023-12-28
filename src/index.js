@@ -10,13 +10,20 @@ app.use(express.json());
 connectDB();
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
+  const allowedOrigins = ['http://localhost:3001', 'https://iridescent-narwhal-6032cc.netlify.app/'];
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
   res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
   );
   next();
 });
+
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
