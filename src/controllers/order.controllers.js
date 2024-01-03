@@ -5,14 +5,15 @@ import { ApiError } from "../utils/apiError.js";
 
 const createOrder = asyncHandler(async(req,res) =>{
 
-    const {email, orderData} = req.body;
+    const {email, orderData, orderDate} = req.body;
+    const data = [{orderDate}, ...orderData];
+    
+    const existedOrders = await Order.findOne({email});
 
-    const order = await Order.findOne({email});
-
-    if(!order){
+    if(!existedOrders){
         await Order.create({
             email,
-            orderData
+            orderData : [data]
         })
     }
     else{
@@ -20,7 +21,7 @@ const createOrder = asyncHandler(async(req,res) =>{
             {email},
             {
                 $push:{
-                    orderData: orderData
+                    orderData: data
                 }
             }
         )
@@ -36,18 +37,18 @@ const createOrder = asyncHandler(async(req,res) =>{
 
 const getOrderData = asyncHandler(async (req,res) =>{
 
-    const {email} = req.params;
+    const {email} = req.body;
 
-    const order = await Order.findOne({email});
+    const existedOrder = await Order.findOne({email});
 
-    if(!order){
+    if(!existedOrder){
         throw new ApiError(400, "No order history found with this email");
     }
 
     return res
     .status(200)
     .json(
-        new ApiResponse(200, order.orderData, "order data fetched successfully")
+        new ApiResponse(200, existedOrder.orderData, "order data fetched successfully")
     )
 
 });
