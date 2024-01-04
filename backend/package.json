@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js",
-    "start": "node -r dotenv/config src/index.js"
+    "start": "node -r dotenv/config src/index.js",
     "build":"npm i"
   },
   "author": "Abhishek Choudhary",
